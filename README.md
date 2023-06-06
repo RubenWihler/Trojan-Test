@@ -60,7 +60,7 @@ Ouvrire le programme de test dans x64dbg.
 
 J'ai d'abord trouver l'adresse du point d'entrée du programme : `00B2CA45`
 
-![point d'entrée](img/entrypoint.png)
+![point d'entrée](img/entrypoint.jpg)
 
 #### 4.1.2 Trouver un code cave
 
