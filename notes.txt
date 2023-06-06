@@ -1,0 +1,21 @@
+point d'entrée de l'application: 00B2CA45
+00B2CA45 | E8 A5060000              | call zoomit.B2D0EF                      |
+00B2CA4A | E9 7AFEFFFF              | jmp zoomit.B2C8C9                       |
+00B2CA4F | 55                       | push ebp                                |
+00B2CA50 | 8BEC                     | mov ebp,esp                             |
+00B2CA52 | 6A 00                    | push 0                                  |
+00B2CA54 | FF15 3C82B500            | call dword ptr ds:[<&SetUnhandledExcept |
+00B2CA5A | FF75 08                  | push dword ptr ss:[ebp+8]               |
+00B2CA5D | FF15 4082B500            | call dword ptr ds:[<&UnhandledException |
+00B2CA63 | 68 090400C0              | push C0000409                           |
+00B2CA68 | FF15 3C81B500            | call dword ptr ds:[<&GetCurrentProcess> |
+00B2CA6E | 50                       | push eax                                |
+00B2CA6F | FF15 3882B500            | call dword ptr ds:[<&TerminateProcess>] |
+00B2CA75 | 5D                       | pop ebp                                 |
+00B2CA76 | C3                       | ret                                     |
+
+
+code cave : 00B57465
+00B57465 | 0000                     | add byte ptr ds:[eax],al                |
+00B57467 | 0000                     | add byte ptr ds:[eax],al                |
+00B57469 | 0000                     | add byte ptr ds:[eax],al                |
