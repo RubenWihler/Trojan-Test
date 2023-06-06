@@ -7,15 +7,15 @@
     - [2.1 Logiciels utilisés](#21-logiciels-utilisés)
   - [3. Creation du shellcode](#3-creation-du-shellcode)
   - [4. Injection du shellcode](#4-injection-du-shellcode)
-      - [4.1.1 Trouver le point d'entrée du programme](#411-trouver-le-point-dentrée-du-programme)
-      - [4.1.2 Trouver un code cave](#412-trouver-un-code-cave)
-      - [4.1.3 Rediriger le point d'entrée du programme vers le code cave](#413-rediriger-le-point-dentrée-du-programme-vers-le-code-cave)
-      - [4.1.4 Sauvegarder les registres et les flags](#414-sauvegarder-les-registres-et-les-flags)
-      - [4.1.5 Injecter le shellcode](#415-injecter-le-shellcode)
-      - [4.1.6 Retourner à l'adresse du point d'entrée du programme](#416-retourner-à-ladresse-du-point-dentrée-du-programme)
-      - [4.1.7 Generation du 1er patch](#417-generation-du-1er-patch)
-      - [4.1.8 Regler le crash](#418-regler-le-crash)
-    - [5 Resultat](#5-resultat)
+      - [4.1 Trouver le point d'entrée du programme](#41-trouver-le-point-dentrée-du-programme)
+      - [4.2 Trouver un code cave](#42-trouver-un-code-cave)
+      - [4.3 Rediriger le point d'entrée du programme vers le code cave](#43-rediriger-le-point-dentrée-du-programme-vers-le-code-cave)
+      - [4.4 Sauvegarder les registres et les flags](#44-sauvegarder-les-registres-et-les-flags)
+      - [4.5 Injecter le shellcode](#45-injecter-le-shellcode)
+      - [4.6 Retourner à l'adresse du point d'entrée du programme](#46-retourner-à-ladresse-du-point-dentrée-du-programme)
+      - [4.7 Generation du 1er patch](#47-generation-du-1er-patch)
+      - [4.8 Regler le crash](#48-regler-le-crash)
+   - [5 Resultat](#5-resultat)
   
 ## 2. Introduction
 Ce projet est un test de création d'un trojan.
@@ -56,26 +56,26 @@ Pour injecter le shellcode dans le programme de test, j'ai utilisé x64dbg.
 
 Ouvrire le programme de test dans x64dbg.
 
-#### 4.1.1 Trouver le point d'entrée du programme
+#### 4.1 Trouver le point d'entrée du programme
 
 J'ai d'abord trouver l'adresse du point d'entrée du programme : `00B2CA45`
 
-![point d'entrée](img/entrypoint.png)
+![point d'entrée](img/entrypoint.jpg)
 
-#### 4.1.2 Trouver un code cave
+#### 4.2 Trouver un code cave
 
 J'ai ensuite, chercher l'adresse du debut du code cave (l'endroit ou on va injecter le shellcode).
 par exemple ici l'adresse est `00B57465`
 
 ![code cave](img/codecave.jpg)
 
-#### 4.1.3 Rediriger le point d'entrée du programme vers le code cave
+#### 4.3 Rediriger le point d'entrée du programme vers le code cave
 
 Il faut maintenant modifier l'instruction de point d'entrée du programme pour qu'elle pointe vers le code cave.
 
 `call B2D0EF` -> `jmp E67465`
 
-#### 4.1.4 Sauvegarder les registres et les flags
+#### 4.4 Sauvegarder les registres et les flags
 
 Apres cela, j'ai ecrit quelque instructions afin de sauvegarder les registres et les flags dans la stack :
 `pushad` : sauvegarde les registres
@@ -83,7 +83,7 @@ Apres cela, j'ai ecrit quelque instructions afin de sauvegarder les registres et
 
 ![pushad pushfd](img/pushad_pushfd.jpg)
 
-#### 4.1.5 Injecter le shellcode
+#### 4.5 Injecter le shellcode
 
 Ouvrire le fichier du shellcode avec HxD et copier le contenu.
 
@@ -102,7 +102,7 @@ popad
 popfd
 ```
 
-#### 4.1.6 Retourner à l'adresse du point d'entrée du programme
+#### 4.6 Retourner à l'adresse du point d'entrée du programme
 
 ![popad popfd](img/popfd_popad.jpg)
 
@@ -110,7 +110,7 @@ Ajouter une instruction pour retourner à l'adresse du point d'entrée du progra
 
 ![code cave](img/final_codecave.jpg)
 
-#### 4.1.7 Generation du 1er patch
+#### 4.7 Generation du 1er patch
 
 Générer le patch du programme avec le shellcode injecté.
 
@@ -119,7 +119,7 @@ En premier lieu, j'ai essayé de trouver a quel moment le program crashait.
 Pour cela j'ai réutilisé x32dbg. 
 En faisant des points d'arrêt sur les instructions `call` du shellcode je remarqué que tout le shellcode c'est bien exécuté apres le `call edp` ci dessous.
 
-#### 4.1.8 Regler le crash
+#### 4.8 Regler le crash
 
 ![call edp](img/shellcode_execution.jpg)
 
@@ -131,7 +131,7 @@ J'ai fait le patch avec x32dbg et voila !
 Le shellcode s'exécute sans crasher le programme.
 
 
-### 5 Resultat
+## 5 Resultat
 
 Donc pour resumer, quand on ouvre le programme, le shellcode s'exécute et ouvre la calculatrice. Ensuite le programme suit son cours normalement.
 
